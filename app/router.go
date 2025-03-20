@@ -12,5 +12,7 @@ func (app *Application) mount() *chi.Mux {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
 
+	r.Get("/health", app.healthCheckHandler)
+
 	return r
 }
