@@ -1,0 +1,28 @@
+basePath: /
+definitions:
+  app.response:
+    properties:
+      status:
+        type: string
+    type: object
+info:
+  contact: {}
+  license:
+    name: Private Company License
+  title: ASM Backend
+  version: "1.0"
+paths:
+  /health:
+    get:
+      description: Get server health status
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.response'
+      summary: healthCheckHandler
+      tags:
+      - internal
+swagger: "2.0"

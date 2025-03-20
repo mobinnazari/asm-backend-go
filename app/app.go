@@ -3,8 +3,10 @@ package app
 import (
 	"log"
 	"net/http"
+	"strings"
 
 	"git.sindadsec.ir/asm/backend/config"
+	"git.sindadsec.ir/asm/backend/docs"
 	"go.uber.org/zap"
 )
 
@@ -23,6 +25,9 @@ func Init(config *config.Config) *Application {
 }
 
 func (app *Application) Run() {
+	docs.SwaggerInfo.Schemes = []string{strings.Split(app.Config.ApiUrl, "://")[0]}
+	docs.SwaggerInfo.Host = strings.Split(app.Config.ApiUrl, "://")[1]
+
 	srv := &http.Server{
 		Addr:    app.Config.Addr,
 		Handler: app.mount(),
