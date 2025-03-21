@@ -6,19 +6,25 @@ import (
 	"strings"
 
 	"git.sindadsec.ir/asm/backend/config"
+	"git.sindadsec.ir/asm/backend/db"
 	"git.sindadsec.ir/asm/backend/docs"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 type Application struct {
 	Config *config.Config
+	DB     *gorm.DB
 	Logger *zap.SugaredLogger
 }
 
 func Init(config *config.Config) *Application {
+	db := db.Init(config.MysqlAddr)
 	logger := zap.Must(zap.NewProduction()).Sugar()
+
 	app := &Application{
 		Config: config,
+		DB:     db,
 		Logger: logger,
 	}
 	return app
