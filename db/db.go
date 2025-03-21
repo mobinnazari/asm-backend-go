@@ -13,5 +13,6 @@ func Init(addr string) *gorm.DB {
 		log.Panicln(err.Error())
 	}
 
+	migrate(db)
 	return db
 }
