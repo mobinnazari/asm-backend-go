@@ -11,6 +11,7 @@ import (
 type response struct {
 	Status     string `json:"status"`
 	Mysql      status `json:"mysql"`
+	Redis      status `json:"redis"`
 	Disposable status `json:"disposable"`
 }
 
@@ -34,6 +35,9 @@ func (app *Application) healthCheckHandler(w http.ResponseWriter, r *http.Reques
 		Mysql: status{
 			Status: "UP",
 		},
+		Redis: status{
+			Status: "UP",
+		},
 		Disposable: status{
 			Status: "UP",
 		},
@@ -53,6 +57,15 @@ func (app *Application) healthCheckHandler(w http.ResponseWriter, r *http.Reques
 		res.Status = "DOWN"
 		res.Mysql.Status = "DOWN"
 		res.Mysql.Reason = err.Error()
+
+		status = http.StatusServiceUnavailable
+		app.Logger.Errorw(err.Error())
+	}
+
+	if err := db.CheckRedisHealth(app.Redis); err != nil {
+		res.Status = "DOWN"
+		res.Redis.Status = "DOWN"
+		res.Redis.Reason = err.Error()
 
 		status = http.StatusServiceUnavailable
 		app.Logger.Errorw(err.Error())

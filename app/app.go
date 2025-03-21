@@ -8,6 +8,7 @@ import (
 	"git.sindadsec.ir/asm/backend/config"
 	"git.sindadsec.ir/asm/backend/db"
 	"git.sindadsec.ir/asm/backend/docs"
+	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -15,16 +16,19 @@ import (
 type Application struct {
 	Config *config.Config
 	DB     *gorm.DB
+	Redis  *redis.Client
 	Logger *zap.SugaredLogger
 }
 
 func Init(config *config.Config) *Application {
-	db := db.Init(config.MysqlAddr)
+	mysql := db.Init(config.MysqlAddr)
+	redis := db.InitRedis(config.RedisAddr)
 	logger := zap.Must(zap.NewProduction()).Sugar()
 
 	app := &Application{
 		Config: config,
-		DB:     db,
+		DB:     mysql,
+		Redis:  redis,
 		Logger: logger,
 	}
 	return app

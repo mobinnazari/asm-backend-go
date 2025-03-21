@@ -7,6 +7,7 @@ type Config struct {
 	MysqlAddr     string
 	ApiUrl        string
 	DisposableUrl string
+	RedisAddr     string
 }
 
 func Init() *Config {
@@ -15,6 +16,7 @@ func Init() *Config {
 		MysqlAddr:     utils.GetStringEnv("MYSQL_ADDR"),
 		ApiUrl:        utils.GetStringEnv("EXTERNAL_ADDR"),
 		DisposableUrl: utils.GetStringEnv("DISPOSABLE_ADDR"),
+		RedisAddr:     utils.GetStringEnv("REDIS_ADDR"),
 	}
 
 	return cfg
