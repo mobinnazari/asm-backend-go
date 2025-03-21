@@ -20,5 +20,11 @@ func (app *Application) mount() *chi.Mux {
 
 	r.Get("/health", app.healthCheckHandler)
 
+	r.Route("/v1", func(r chi.Router) {
+		r.Route("/auth", func(r chi.Router) {
+			r.Post("/register", app.registerHandler)
+		})
+	})
+
 	return r
 }

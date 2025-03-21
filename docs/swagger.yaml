@@ -2,6 +2,15 @@ basePath: /
 definitions:
   app.response:
     properties:
+      disposable:
+        $ref: '#/definitions/app.status'
+      status:
+        type: string
+    type: object
+  app.status:
+    properties:
+      reason:
+        type: string
       status:
         type: string
     type: object
@@ -20,6 +29,10 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/app.response'
+        "503":
+          description: Service Unavailable
           schema:
             $ref: '#/definitions/app.response'
       summary: healthCheckHandler

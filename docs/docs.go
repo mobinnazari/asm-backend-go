@@ -34,6 +34,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/app.response"
                         }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/app.response"
+                        }
                     }
                 }
             }
@@ -43,6 +49,20 @@ const docTemplate = `{
         "app.response": {
             "type": "object",
             "properties": {
+                "disposable": {
+                    "$ref": "#/definitions/app.status"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "app.status": {
+            "type": "object",
+            "properties": {
+                "reason": {
+                    "type": "string"
+                },
                 "status": {
                     "type": "string"
                 }
