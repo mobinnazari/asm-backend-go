@@ -8,7 +8,9 @@ import (
 )
 
 type registerPayload struct {
-	Email string `json:"email" validate:"required,email,non-public"`
+	Email        string `json:"email" validate:"required,email,non-public"`
+	Password     string `json:"password" validate:"required,min=8,complex"`
+	Organization string `json:"required`
 }
 
 func (app *Application) registerHandler(w http.ResponseWriter, r *http.Request) {
