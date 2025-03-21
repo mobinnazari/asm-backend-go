@@ -5,4 +5,5 @@ type Organization struct {
 	Name    string   `json:"name" gorm:"uniqueIndex;size:128"`
 	Targets []Target `json:"targets"`
 	Limit   int      `json:"limit"`
+	Users   []User   `json:"users"`
 }

@@ -40,7 +40,15 @@ func (app *Application) registerHandler(w http.ResponseWriter, r *http.Request) 
 		Name:  payload.Organization,
 		Limit: 1,
 	}
-	if err := repo.CreateUser(app.DB, org, r.Context()); err != nil {
+	user := &models.User{
+		Email:    payload.Email,
+		Password: utils.HashPassword(payload.Password),
+		Enabled:  false,
+		Locked:   false,
+		Otp:      false,
+		Role:     "ADMIN",
+	}
+	if err := repo.CreateUser(app.DB, org, user, r.Context()); err != nil {
 		switch {
 		case errors.Is(err, repo.ErrDuplicateEntry):
 			app.Logger.Warnw(err.Error(), "entity", "organization")
