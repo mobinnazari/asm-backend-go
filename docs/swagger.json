@@ -35,13 +35,96 @@
                     }
                 }
             }
+        },
+        "/v1/auth/register": {
+            "post": {
+                "description": "Register new user and organization",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "registerHandler",
+                "parameters": [
+                    {
+                        "description": "Register payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/app.registerPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/app.commonResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.errorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "app.commonResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "app.registerPayload": {
+            "type": "object",
+            "required": [
+                "email",
+                "organization",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "organization": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 8
+                }
+            }
+        },
         "app.response": {
             "type": "object",
             "properties": {
                 "disposable": {
+                    "$ref": "#/definitions/app.status"
+                },
+                "mail": {
+                    "$ref": "#/definitions/app.status"
+                },
+                "mysql": {
+                    "$ref": "#/definitions/app.status"
+                },
+                "redis": {
                     "$ref": "#/definitions/app.status"
                 },
                 "status": {
@@ -56,6 +139,14 @@
                     "type": "string"
                 },
                 "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "utils.errorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
                     "type": "string"
                 }
             }

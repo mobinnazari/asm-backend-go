@@ -20,6 +20,18 @@ type commonResponse struct {
 	Message string `json:"message"`
 }
 
+// registerHandler godoc
+//
+//	@Summary		registerHandler
+//	@Description	Register new user and organization
+//	@Tags			auth
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		app.registerPayload	true	"Register payload"
+//	@Success		201		{object}	app.commonResponse
+//	@Failure		400		{object}	utils.errorResponse
+//	@Failure		500		{object}	utils.errorResponse
+//	@Router			/v1/auth/register [post]
 func (app *Application) registerHandler(w http.ResponseWriter, r *http.Request) {
 	var payload registerPayload
 	if err := utils.ReadJson(r.Body, &payload); err != nil {
@@ -31,7 +43,7 @@ func (app *Application) registerHandler(w http.ResponseWriter, r *http.Request) 
 	res, err := clients.IsDisposable(app.Config.DisposableUrl, payload.Email)
 	if err != nil {
 		app.Logger.Errorw(err.Error())
-		utils.WriteJsonError(w, http.StatusServiceUnavailable, err.Error())
+		utils.WriteJsonError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 	if *res == "true" {

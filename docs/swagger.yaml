@@ -1,8 +1,33 @@
 basePath: /
 definitions:
+  app.commonResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  app.registerPayload:
+    properties:
+      email:
+        type: string
+      organization:
+        type: string
+      password:
+        minLength: 8
+        type: string
+    required:
+    - email
+    - organization
+    - password
+    type: object
   app.response:
     properties:
       disposable:
+        $ref: '#/definitions/app.status'
+      mail:
+        $ref: '#/definitions/app.status'
+      mysql:
+        $ref: '#/definitions/app.status'
+      redis:
         $ref: '#/definitions/app.status'
       status:
         type: string
@@ -12,6 +37,11 @@ definitions:
       reason:
         type: string
       status:
+        type: string
+    type: object
+  utils.errorResponse:
+    properties:
+      error:
         type: string
     type: object
 info:
@@ -38,4 +68,34 @@ paths:
       summary: healthCheckHandler
       tags:
       - internal
+  /v1/auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register new user and organization
+      parameters:
+      - description: Register payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/app.registerPayload'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/app.commonResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.errorResponse'
+      summary: registerHandler
+      tags:
+      - auth
 swagger: "2.0"
