@@ -16,6 +16,10 @@ type registerPayload struct {
 	Organization string `json:"organization" validate:"required"`
 }
 
+type commonResponse struct {
+	Message string `json:"message"`
+}
+
 func (app *Application) registerHandler(w http.ResponseWriter, r *http.Request) {
 	var payload registerPayload
 	if err := utils.ReadJson(r.Body, &payload); err != nil {
@@ -48,7 +52,7 @@ func (app *Application) registerHandler(w http.ResponseWriter, r *http.Request) 
 		Otp:      false,
 		Role:     "ADMIN",
 	}
-	if err := repo.CreateUser(app.DB, app.Redis, org, user, r.Context()); err != nil {
+	if err := repo.CreateUser(app.DB, app.Redis, org, user, r.Context(), app.Email); err != nil {
 		switch {
 		case errors.Is(err, repo.ErrDuplicateEntry):
 			app.Logger.Warnw(err.Error(), "entity", "organization")
@@ -60,5 +64,8 @@ func (app *Application) registerHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	utils.WriteJson(w, http.StatusNoContent, nil)
+	response := &commonResponse{
+		Message: "Registration is done successfully. Please enter the 6 digit code sent to your email",
+	}
+	utils.WriteJson(w, http.StatusCreated, response)
 }

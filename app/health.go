@@ -5,6 +5,7 @@ import (
 
 	"git.sindadsec.ir/asm/backend/clients"
 	"git.sindadsec.ir/asm/backend/db"
+	"git.sindadsec.ir/asm/backend/mail"
 	"git.sindadsec.ir/asm/backend/utils"
 )
 
@@ -12,6 +13,7 @@ type response struct {
 	Status     string `json:"status"`
 	Mysql      status `json:"mysql"`
 	Redis      status `json:"redis"`
+	Mail       status `json:"mail"`
 	Disposable status `json:"disposable"`
 }
 
@@ -36,6 +38,9 @@ func (app *Application) healthCheckHandler(w http.ResponseWriter, r *http.Reques
 			Status: "UP",
 		},
 		Redis: status{
+			Status: "UP",
+		},
+		Mail: status{
 			Status: "UP",
 		},
 		Disposable: status{
@@ -66,6 +71,15 @@ func (app *Application) healthCheckHandler(w http.ResponseWriter, r *http.Reques
 		res.Status = "DOWN"
 		res.Redis.Status = "DOWN"
 		res.Redis.Reason = err.Error()
+
+		status = http.StatusServiceUnavailable
+		app.Logger.Errorw(err.Error())
+	}
+
+	if err := mail.CheckHealth(app.Email); err != nil {
+		res.Status = "DOWN"
+		res.Mail.Status = "DOWN"
+		res.Mail.Reason = err.Error()
 
 		status = http.StatusServiceUnavailable
 		app.Logger.Errorw(err.Error())
