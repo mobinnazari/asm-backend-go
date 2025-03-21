@@ -48,7 +48,7 @@ func (app *Application) registerHandler(w http.ResponseWriter, r *http.Request) 
 		Otp:      false,
 		Role:     "ADMIN",
 	}
-	if err := repo.CreateUser(app.DB, org, user, r.Context()); err != nil {
+	if err := repo.CreateUser(app.DB, app.Redis, org, user, r.Context()); err != nil {
 		switch {
 		case errors.Is(err, repo.ErrDuplicateEntry):
 			app.Logger.Warnw(err.Error(), "entity", "organization")

@@ -3,17 +3,20 @@ package repo
 import (
 	"context"
 	"errors"
+	"log"
 	"time"
 
+	"git.sindadsec.ir/asm/backend/hash"
 	"git.sindadsec.ir/asm/backend/models"
 	"github.com/go-sql-driver/mysql"
+	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 )
 
-func CreateUser(db *gorm.DB, org *models.Organization, user *models.User, rctx context.Context) error {
+func CreateUser(db *gorm.DB, client *redis.Client, org *models.Organization, user *models.User, rctx context.Context) error {
 	var mysqlErr *mysql.MySQLError
 
-	ctx, cancel := context.WithTimeout(rctx, time.Second*3)
+	ctx, cancel := context.WithTimeout(rctx, time.Second*5)
 	defer cancel()
 
 	tx := db.Begin()
@@ -49,6 +52,13 @@ func CreateUser(db *gorm.DB, org *models.Organization, user *models.User, rctx c
 		tx.Rollback()
 		return err
 	}
+
+	code, err := hash.GenerateEmailVerification(client, user.Email, rctx)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	log.Println(code)
 
 	tx.Commit()
 	return nil
