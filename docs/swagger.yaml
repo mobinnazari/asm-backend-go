@@ -19,6 +19,13 @@ definitions:
     - organization
     - password
     type: object
+  app.resendVerificationPayload:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
   app.response:
     properties:
       disposable:
@@ -96,6 +103,40 @@ paths:
           schema:
             $ref: '#/definitions/utils.errorResponse'
       summary: registerHandler
+      tags:
+      - auth
+  /v1/auth/resend-email-verification:
+    post:
+      consumes:
+      - application/json
+      description: Resend verification email
+      parameters:
+      - description: Resend verification payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/app.resendVerificationPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.commonResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.errorResponse'
+        "425":
+          description: Too Early
+          schema:
+            $ref: '#/definitions/utils.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.errorResponse'
+      summary: resendEmailVerificationHandler
       tags:
       - auth
 swagger: "2.0"

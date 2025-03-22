@@ -81,6 +81,58 @@
                     }
                 }
             }
+        },
+        "/v1/auth/resend-email-verification": {
+            "post": {
+                "description": "Resend verification email",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "resendEmailVerificationHandler",
+                "parameters": [
+                    {
+                        "description": "Resend verification payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/app.resendVerificationPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.commonResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.errorResponse"
+                        }
+                    },
+                    "425": {
+                        "description": "Too Early",
+                        "schema": {
+                            "$ref": "#/definitions/utils.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.errorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -109,6 +161,17 @@
                 "password": {
                     "type": "string",
                     "minLength": 8
+                }
+            }
+        },
+        "app.resendVerificationPayload": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
                 }
             }
         },

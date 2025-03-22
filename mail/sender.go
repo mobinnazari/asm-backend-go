@@ -2,10 +2,10 @@ package mail
 
 import "gopkg.in/gomail.v2"
 
-func SendRegistrationEmail(from, to, code string, dialer *gomail.Dialer) error {
+func SendRegistrationEmail(to, code string, dialer *gomail.Dialer) error {
 	m := gomail.NewMessage()
 
-	m.SetHeader("From", from)
+	m.SetHeader("From", dialer.Username)
 	m.SetHeader("To", to)
 	m.SetHeader("Subject", "ASM: verify your email")
 

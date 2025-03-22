@@ -59,7 +59,7 @@ func CreateUser(db *gorm.DB, client *redis.Client, org *models.Organization, use
 		tx.Rollback()
 		return err
 	}
-	if err := mail.SendRegistrationEmail(dialer.Username, user.Email, code, dialer); err != nil {
+	if err := mail.SendRegistrationEmail(user.Email, code, dialer); err != nil {
 		tx.Rollback()
 		return err
 	}

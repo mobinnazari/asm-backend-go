@@ -23,6 +23,7 @@ func (app *Application) mount() *chi.Mux {
 	r.Route("/v1", func(r chi.Router) {
 		r.Route("/auth", func(r chi.Router) {
 			r.Post("/register", app.registerHandler)
+			r.Post("/resend-email-verification", app.resendEmailVerificationHandler)
 		})
 	})
 
